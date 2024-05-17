@@ -36,7 +36,7 @@ public class MemoController {
         // Map to List
         List<MemoResponseDto> responseList = new ArrayList<>();
         for(Memo requestMemo : memoList.values()) {
-            MemoResponseDto a=new MemoResponseDto(requestMemo);
+            MemoResponseDto a=new MemoResponseDto(requestMemo); // Memo 클래스를 MemoResponseDto 클래스로 바꾸기
             responseList.add(a);
         }
         
@@ -44,10 +44,10 @@ public class MemoController {
         
     }
 
-//    @PutMapping("/memos/{id}")
-//    public Long editMemos(@PathVariable) {
-//
-//    }
+    @PutMapping("/memos/{id}")
+    public Long editMemos(@PathVariable) {
+
+    }
 //
 //    @DeleteMapping("/memos/{id}")
 //    public Long deleteMemos(@PathVariable) {
