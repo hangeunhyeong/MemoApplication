@@ -8,4 +8,7 @@ public class MemoRequestDto {
     private Long id;
     private String username;
     private String contents;
+
+
+
 }
