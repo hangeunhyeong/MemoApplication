@@ -3,10 +3,15 @@ package com.sparta.memo.repository;
 import com.sparta.memo.dto.MemoRequestDto;
 import com.sparta.memo.dto.MemoResponseDto;
 import com.sparta.memo.entity.Memo;
+import jakarta.persistence.EntityManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,19 +19,22 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
+@Repository
 public class MemoRepository {
     private final JdbcTemplate jdbcTemplate;
 
+    @Autowired
     public MemoRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
 
     public Memo save(Memo memo) {
         // DB 저장
         KeyHolder keyHolder = new GeneratedKeyHolder(); // 기본 키를 반환받기 위한 객체
 
         String sql = "INSERT INTO memo (username, contents) VALUES (?, ?)";
-        jdbcTemplate.update( con -> {
+        jdbcTemplate.update(con -> {
                     PreparedStatement preparedStatement = con.prepareStatement(sql,
                             Statement.RETURN_GENERATED_KEYS);
 
@@ -59,13 +67,12 @@ public class MemoRepository {
     }
 
 
-
     public Memo findById(Long id) {
         // DB 조회
         String sql = "SELECT * FROM memo WHERE id = ?";
 
         return jdbcTemplate.query(sql, resultSet -> {
-            if(resultSet.next()) {
+            if (resultSet.next()) {
                 Memo memo = new Memo();
                 memo.setUsername(resultSet.getString("username"));
                 memo.setContents(resultSet.getString("contents"));
@@ -85,5 +92,15 @@ public class MemoRepository {
         // memo 삭제
         String sql = "DELETE FROM memo WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public Memo createMemo(EntityManager em) {
+        Memo memo = em.find(Memo.class, 1);
+        memo.setUsername("Robbert");
+        memo.setContents("@Transactional 테스트중 2");
+
+        System.out.println("createMemo 메서드 종료");
+        return memo;
     }
 }
