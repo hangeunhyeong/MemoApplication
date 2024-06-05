@@ -1,7 +1,6 @@
 package com.sparta.memo.dto;
 
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 public class MemoRequestDto {
