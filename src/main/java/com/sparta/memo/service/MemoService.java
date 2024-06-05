@@ -48,7 +48,7 @@ public class MemoService {
     @Transactional
     public Long updateMemo(Long id, MemoRequestDto requestDto) {
         // 해당 메모가 DB에 존재하는지 확인
-        Memo memo = memoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("선택한 메모는 존재하지 않습니다."));
+        Memo memo = findMemo(id);
         // 메모 내용 수정
         memo.update(requestDto); //변경 감지 -> 영속성컨텍스트에 존재해야함 -> transaction 필요
         return id;
@@ -58,10 +58,13 @@ public class MemoService {
 
 //    @Transactional // 메모 db에 직접 접근하는것이므로 필요없음
     public Long deleteMemo(Long id) {
-        Memo memo = memoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("선택한 메모는 존재하지 않습니다."));
+        // 해당 메모가 DB에 존재하는지 확인
+        Memo memo = findMemo(id);
         memoRepository.delete(memo);
         return id;
     }
 
-
+    private Memo findMemo(Long id) {
+        return memoRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("선택한 메모는 존재하지 않습니다"));
+    }
 }
