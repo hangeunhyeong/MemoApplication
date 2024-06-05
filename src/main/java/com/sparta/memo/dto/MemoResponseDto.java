@@ -10,7 +10,7 @@ public class MemoResponseDto {
     private Long id;
     private String username;
     private String contents;
-    private LocalDateTime createdAt;
+    private final LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
 
